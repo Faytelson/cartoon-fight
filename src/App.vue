@@ -266,7 +266,7 @@ export default {
     },
     throwRandomNum() {
       let random = Math.ceil(Math.random() * 10);
-      return random + 46;
+      return random + 8;
     },
     calculateProgress(side) {
       let currentPlayer = this.players[side];
