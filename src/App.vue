@@ -1,69 +1,30 @@
 <template>
-  <div
-    id="app"
-    class="app">
+  <div id="app" class="app">
     <div class="app__container">
       <div class="app__players">
-        <Player
-          v-for="player in players"
-          :key="player.id"
-          :player="player"
-          :counter="counter">
-        </Player>
+        <Player v-for="player in players" :key="player.id" :player="player" :counter="counter"> </Player>
       </div>
       <div class="app__actions-panel">
         <div class="app__buttons-container">
-          <div
-            class="app__start-button"
-            v-if="!isGameOn">
-            <ButtonAction
-              :button="buttonAction"
-              @emitBtnClick="handleClick">
-            </ButtonAction>
+          <div class="app__start-button" v-if="!isGameOn">
+            <ButtonAction :button="buttonAction" @emitBtnClick="handleClick"> </ButtonAction>
           </div>
-          <div
-            class="app__back-button"
-            v-if="isBack">
-            <ButtonAction
-              :button="buttonBack"
-              @emitBtnClick="handleClick"></ButtonAction>
+          <div class="app__back-button" v-if="isBack">
+            <ButtonAction :button="buttonBack" @emitBtnClick="handleClick"></ButtonAction>
           </div>
-          <div
-            class="app__buttons"
-            v-if="isGameOn && !isBack">
-            <div
-              class="app__button"
-              v-for="button in buttons"
-              :key="button.id">
-              <ButtonAction
-                :button="button"
-                @emitBtnClick="handleClick">
-              </ButtonAction>
+          <div class="app__buttons" v-if="isGameOn && !isBack">
+            <div class="app__button" v-for="button in buttons" :key="button.id">
+              <ButtonAction :button="button" @emitBtnClick="handleClick"> </ButtonAction>
             </div>
           </div>
         </div>
       </div>
-      <div
-        class="app__log-panel"
-        v-for="(line, index) in logLines"
-        :key="index">
+      <div class="app__log-panel" v-for="(line, index) in logLines" :key="index">
         <LogPanel :line="line"></LogPanel>
       </div>
-      <div
-        class="app__dialog"
-        v-if="isDialog">
+      <div class="app__dialog" v-if="isDialog">
         <Dialog :info="dialogInfo"></Dialog>
       </div>
-      <!-- <div
-        class="app__sound"
-        v-if="isGameOn && !isBack">
-        <embed
-          :src="require('@/assets/media/soviet_march.mp3')"
-          width="100%"
-          autostart
-          controls
-          loop="True" />
-      </div> -->
     </div>
   </div>
 </template>
@@ -194,7 +155,7 @@ export default {
         this.healthIncreased = true;
         this.handleButton(this.buttons[2], "disable");
       } else if (id === 4) {
-        this.announceGameOver(null, true);
+        this.announceGameOver("player");
       } else if (id === 5) {
         this.isGameOn = true;
         this.disableAllButtons();
@@ -330,29 +291,19 @@ export default {
       };
       this.logLines.push(newLine);
     },
-    announceGameOver(id, status) {
-      if (status) {
-        this.showDialog(null, "player");
+    announceGameOver(id) {
+      if (id === "enemy") {
+        this.showDialog("end success");
       } else {
-        if (id === "enemy") {
-          this.showDialog("end success");
-        } else {
-          this.showDialog("end fail");
-        }
+        this.showDialog("end fail");
       }
       this.isBack = true;
     },
     reset() {
-      this.dialogInfo = {
-        messageType: null,
-        side: null,
-        name: null,
-        damage: null,
-      };
+      this.hideDialog();
       this.counter = 0;
       this.specialAttackCounter = 0;
       this.isGameOn = false;
-      this.isDialog = false;
       this.healthIncreased = false;
       this.isBack = false;
       for (let key in this.players) {
